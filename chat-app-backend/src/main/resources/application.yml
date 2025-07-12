@@ -1,0 +1,8 @@
+Spring:
+  server:
+    port: 8080
+  data:
+    mongodb:
+      uri: mongodb+srv://monotonousharsh:I2UMWAnU0WXZ8csc@cluster0.ag2sl5g.mongodb.net/chat_Application?retryWrites=true&w=majority&appName=Cluster0&tls=true&connectTimeoutMS=10000
+      database: chat_Application
+      auto-index-creation: true

@@ -4,7 +4,9 @@ package com.triolance.chat.chat_app_backend.Entity;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.Instant;
 
 
 @Getter
@@ -14,17 +16,28 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
 public class User {
-
     @Id
-    private Object id;
+    private String id;               // MongoDB’s internal _id
 
-    @NonNull
-    private String username;
+    @Field("username")
+    private String username;         // unique login name
 
-    @NonNull
-    private  String password;
+    @Field("displayName")
+    private String displayName;      // what shows up in chat
 
-    @NonNull
-    private String email;
+
+     // store only a hash!
+    private String password;
+
+    /**
+     * The single room the user is currently in (null if none).
+     */
+
+
+    @Field("createdAt")
+    private Instant createdAt = Instant.now();
+
+    @Field("lastActiveAt")
+    private Instant lastActiveAt = Instant.now();
 
 }

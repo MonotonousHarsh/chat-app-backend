@@ -32,6 +32,15 @@ public class Room {
     @Field("messages")
     private List<Message>messages = new ArrayList<>();
 
+    public  void addMessage(String username , String content){
+
+        this.messages.add(new Message(username ,content,Instant.now()));
+
+
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Message{
 
         @Field("username")
@@ -45,9 +54,7 @@ public class Room {
 
     }
 
-        public static void addMessage(Message message){
 
-        }
 
 
 
