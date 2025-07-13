@@ -8,13 +8,16 @@ import lombok.Setter;
 import org.apache.logging.log4j.message.Message;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.lang.annotation.Documented;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,6 +29,7 @@ public class Room {
     @Id
     private ObjectId id;
 
+    @Indexed(unique = true)
     @Field("roomId")
     private String roomId;
 
@@ -56,7 +60,14 @@ public class Room {
 
 
 
+    @Field("participants")
+    private Set<String> participants = new HashSet<>();
 
+    public void addParticipants(String username){
+           participants.add(username);
+    }
 
-
+    public void removeParticipants(String username){
+        participants.remove(username);
+    }
 }
