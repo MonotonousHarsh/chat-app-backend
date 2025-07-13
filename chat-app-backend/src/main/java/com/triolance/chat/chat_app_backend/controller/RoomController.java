@@ -18,7 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 
 @RestController
 @RequestMapping("/room")
@@ -66,14 +69,22 @@ public class RoomController {
             if(authentication==null){
                 return new ResponseEntity<>("Please do  Login first",HttpStatus.UNAUTHORIZED);
             }try {
-            String joinedRoom = roomService.joinRoom(room.getRoomId(), authentication.getName());
+                String username =   authentication.getName();
+                String roomId = room.getRoomId();
+
+            String joinedRoom = roomService.joinRoom(roomId,username);
+
+              return ResponseEntity.ok(java.util.Map.of(
+                    "status", "success",
+                    "message", "Joined room: " + roomId
+            ));
         }catch(Exception e){
                 log.error("error arha hai!! while creating ROOM",e);
             System.out.println("check krle Room Service Ko"  + e);
-            return new ResponseEntity<>("Exception in joining room" , HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(java.util.Map.of("error", e.getMessage()));
 
         }
-            return new ResponseEntity<>("User Not log in in website" , HttpStatus.UNAUTHORIZED);
 
     }
 

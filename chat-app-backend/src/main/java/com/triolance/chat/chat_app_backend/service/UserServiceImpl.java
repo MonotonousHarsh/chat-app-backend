@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserDetailsService {
 
+    @Autowired
+    private User user;
 
     @Autowired
     private UserRepository userRepository;
@@ -22,7 +24,7 @@ public class UserServiceImpl implements UserDetailsService {
 try {
     if (user != null) {
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
+                .username(username)
                 .password(user.getPassword())
                 .roles(user.getRoles().toArray(new String[0]))
                 .build();

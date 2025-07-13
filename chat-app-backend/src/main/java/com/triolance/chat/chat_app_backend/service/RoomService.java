@@ -45,7 +45,7 @@ public class RoomService {
             userRepository.save(user);
             return "room created successfully ! with roomId " + " " + roomId;
         } catch (DuplicateKeyException e) {
-            log.error("this error occur while creating room",e);
+         //   log.error("this error occur while creating room",e);
             return "Room creation failed. Room ID must be unique.";
         }
     }
@@ -56,13 +56,13 @@ public class RoomService {
         Room room = roomRepository.findByRoomId(roomId);
 
         if(room == null){
-            return "room Not Found" ;
+            return "room Not Found"+roomId;
 
         }
 
-        if(room.getParticipants().contains(username)){
-            return " You already present inside room";
-
+        if(!room.getParticipants().contains(username)){
+            room.addParticipants(username);
+        roomRepository.save(room);
         }
 
         room.addParticipants(username);

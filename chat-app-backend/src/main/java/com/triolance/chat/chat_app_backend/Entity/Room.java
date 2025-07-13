@@ -11,6 +11,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Documented;
 import java.time.Instant;
@@ -23,6 +24,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Component
 @Document(collection = "Room_collection")
 public class Room {
 
@@ -33,30 +35,6 @@ public class Room {
     @Field("roomId")
     private String roomId;
 
-    @Field("messages")
-    private List<Message>messages = new ArrayList<>();
-
-    public  void addMessage(String username , String content){
-
-        this.messages.add(new Message(username ,content,Instant.now()));
-
-
-    }
-
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Message{
-
-        @Field("username")
-        private String username;
-
-        @Field("content")
-        private String content;
-
-        private Instant timestamp;
-
-
-    }
 
 
 
@@ -69,5 +47,29 @@ public class Room {
 
     public void removeParticipants(String username){
         participants.remove(username);
+    }
+
+    public void setParticipants(Set<String> participants) {
+        this.participants = participants;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    public Set<String> getParticipants() {
+        return participants;
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public ObjectId getId() {
+        return id;
     }
 }

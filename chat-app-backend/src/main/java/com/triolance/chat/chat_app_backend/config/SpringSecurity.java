@@ -50,7 +50,7 @@ public class SpringSecurity {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration cfg = new CorsConfiguration();
-    cfg.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176"));
+    cfg.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176"));
     cfg.addAllowedMethod(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS").toString());
     cfg.addAllowedHeader(List.of("*").toString());
     cfg.setAllowCredentials(true);
