@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/User")
+//@CrossOrigin(origins = "http://localhost:5174")
 public class UserController {
 
 
@@ -25,13 +26,21 @@ public class UserController {
     private UserServiceImpl userServiceImpl;
 
 
-    @PostMapping("/signup")
-    public ResponseEntity<User> SignUp(@RequestBody User user) {
-        User saved = userService.saveUser(user);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(saved);
+       @PostMapping("/signup")
+    public ResponseEntity<User>SignUp(@RequestBody User user) {
+       try {
+           User saved = userService.saveUser(user);
+           System.out.println("check kro error kko " + saved);
+           return ResponseEntity
+                   .status(HttpStatus.CREATED)
+                   .body(saved);
+       }catch(Exception e){
+           System.out.println("this error a rha hai signup m" + e);
+           // log.error("ye error in signup" , e);
+       }
+       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<String> login (@RequestBody User user){

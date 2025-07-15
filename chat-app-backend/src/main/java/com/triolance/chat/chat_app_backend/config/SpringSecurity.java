@@ -40,7 +40,7 @@ public class SpringSecurity {
 
 
               .authorizeHttpRequests(auth->auth
-                      .requestMatchers("/room/**", "/user/**").authenticated()
+                      .requestMatchers("/room/**").authenticated()
                       .anyRequest().permitAll()
               )
               .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS) );
@@ -50,13 +50,14 @@ public class SpringSecurity {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration cfg = new CorsConfiguration();
-    cfg.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176"));
-    cfg.addAllowedMethod(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS").toString());
-    cfg.addAllowedHeader(List.of("*").toString());
-    cfg.setAllowCredentials(true);
+    cfg.setAllowedOrigins(List.of("http://localhost:5174"));
+        cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+        cfg.setAllowedHeaders(List.of("*"));                       // allow Authorization, Content‑Type, etc.
+        cfg.setAllowCredentials(true);                              // send cookies/credentials if needed
 
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", cfg);
 
     return source;
