@@ -25,6 +25,9 @@ public class JwtUtils {
 
     private Room room;
 
+
+
+
     private final String SECRET_KEY = "ZrUqXFHJoGIb7DSwBKuBOmfOB2k7W4/7quXloT8bVRs=";
 
 
@@ -59,7 +62,7 @@ public class JwtUtils {
 
     public String generateToken(String username) {
         HashMap<String ,Object>Claims = new HashMap<>();
-        Claims.put("roomId",room.getRoomId());
+       // Claims.put("roomId",room.getRoomId());
 
         return createToken(username,Claims);
     }

@@ -3,9 +3,14 @@ package com.triolance.chat.chat_app_backend.Entity;
 
 import lombok.*;
 import org.bson.types.ObjectId;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -18,12 +23,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
+
 @Document(collection = "users")
 public class User {
     @Id
-    private ObjectId id;               // MongoDB’s internal _id
+    private String id;               // MongoDB’s internal _id
 
     @Field("username")
+    @Indexed(unique = true)
     private String username;         // unique login name
 
     private String email;
@@ -49,6 +56,7 @@ public class User {
 
     @Field("lastActiveAt")
     private Instant lastActiveAt = Instant.now();
+
 
 
 
@@ -83,9 +91,16 @@ public class User {
         this.username = username;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
 
     public Instant getLastActiveAt() {
         return lastActiveAt;
@@ -103,7 +118,17 @@ public class User {
         return username;
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='[PROTECTED]'" + // Never log actual passwords!
+                // add other fields you need to see
+                '}';
     }
 }

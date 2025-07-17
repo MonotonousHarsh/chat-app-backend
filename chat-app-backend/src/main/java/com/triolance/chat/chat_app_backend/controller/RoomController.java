@@ -43,9 +43,17 @@ public class RoomController {
     public ResponseEntity<?> createRoom(@RequestBody Room room){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication==null){
+        if(authentication==null || !authentication.isAuthenticated()){
             return new ResponseEntity<>("Unauthorised",HttpStatus.UNAUTHORIZED);
         }
+
+        // Add this debug log
+        System.out.println("AUTH DETAILS: " +
+                (authentication != null
+                        ? "User: " + authentication.getName() + " | Roles: " + authentication.getAuthorities()
+                        : "No authentication"
+                ));
+
 
         try {
 //            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,7 +61,7 @@ public class RoomController {
 //                return new ResponseEntity<>("Unauthorised",HttpStatus.UNAUTHORIZED);
 
             String createRoom = roomService.CreateRoom(room.getRoomId(), authentication.getName());
-
+            System.out.println("checkks  " + createRoom);
 
             return new ResponseEntity<>(createRoom, HttpStatus.CREATED);
         }catch(Exception e){

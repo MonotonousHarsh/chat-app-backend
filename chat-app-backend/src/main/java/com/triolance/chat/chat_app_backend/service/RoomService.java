@@ -8,8 +8,11 @@ import com.triolance.chat.chat_app_backend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 @Slf4j
@@ -29,17 +32,33 @@ public class RoomService {
     private User user;
 
 
+    @Transactional
     public  String CreateRoom(String roomId , String creatorUsername){
 
-        // check roomId already Exist ??
-        if(roomRepository.findByRoomId(roomId).equals(roomId) && roomRepository.findByRoomId(roomId) != null){
-            return "Room Id already exist . please Choose different";
+
+        if (roomRepository.existsByRoomId(roomId)) {
+            return "Room ID already exists. Please choose a different ID.";
         }
+
+        User creator = userRepository.findByUsername(creatorUsername);
+                //.orElseThrow(()-> new RuntimeException("user not found"));
+        if(creator==null){
+            throw new RuntimeException("user not found");
+        }
+
+        //Add host role
+        if(!user.getRoles().contains("host")){
+            List<String> updatedRoles = new ArrayList<>(creator.getRoles());
+            updatedRoles.add("Host");
+        }
+        // check roomId already Exist ??
+
         try {
             Room newRoom = new Room();
             newRoom.setRoomId(roomId);
             newRoom.addParticipants(creatorUsername);
-            user.setRoles(Collections.singletonList("Host"));
+            newRoom.setHostUsername(creatorUsername);
+         //   user.setRoles(Collections.singletonList("Host"));
 
             roomRepository.save(newRoom);
             userRepository.save(user);

@@ -1,6 +1,7 @@
 package com.triolance.chat.chat_app_backend.config;
 
 import com.triolance.chat.chat_app_backend.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -22,12 +24,16 @@ import java.util.List;
 public class SpringSecurity {
 
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public AuthenticationManager authenticationManager(HttpSecurity http,
                                                        UserServiceImpl userDetails) throws Exception {
         AuthenticationManagerBuilder authBuilder =
 
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder.userDetailsService(userDetails);
+        authBuilder.userDetailsService(userDetails)
+                .passwordEncoder(passwordEncoder);
 
         return authBuilder.build();
     }
@@ -40,6 +46,8 @@ public class SpringSecurity {
 
 
               .authorizeHttpRequests(auth->auth
+                      .requestMatchers("/signup").permitAll() // Explicitly permit signup
+                      .requestMatchers("/login").permitAll()  // Add login if needed
                       .requestMatchers("/room/**").authenticated()
                       .anyRequest().permitAll()
               )

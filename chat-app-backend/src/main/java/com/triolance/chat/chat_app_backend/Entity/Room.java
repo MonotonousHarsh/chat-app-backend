@@ -35,7 +35,15 @@ public class Room {
     @Field("roomId")
     private String roomId;
 
+    public String getHostUsername() {
+        return hostUsername;
+    }
 
+    public void setHostUsername(String hostUsername) {
+        this.hostUsername = hostUsername;
+    }
+
+    private String hostUsername;
 
 
     @Field("participants")
