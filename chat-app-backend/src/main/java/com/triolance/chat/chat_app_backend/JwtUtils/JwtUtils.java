@@ -28,7 +28,7 @@ public class JwtUtils {
 
 
 
-    private final String SECRET_KEY = "ZrUqXFHJoGIb7DSwBKuBOmfOB2k7W4/7quXloT8bVRs=";
+    private final String SECRET_KEY = "Hk9XpjLwQrJ8k6sRtpOVx3Y1bFCoWQx8yZe1Mnq+ZXg=";
 
 
     private SecretKey getSigningKey() {

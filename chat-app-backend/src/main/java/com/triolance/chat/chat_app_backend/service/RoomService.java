@@ -79,14 +79,14 @@ public class RoomService {
 
         }
 
-        if(!room.getParticipants().contains(username)){
-            room.addParticipants(username);
-        roomRepository.save(room);
+        // 2. Add user to room
+        if (!room.getParticipants().contains(username)) {
+            room.getParticipants().add(username);
+            roomRepository.save(room);
         }
 
-        room.addParticipants(username);
-        roomRepository.save(room);
-        return "You Joined Room Successfully";
+
+        return "You Joined Room Successfully  " + roomId;
 
     }
 }

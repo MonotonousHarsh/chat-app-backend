@@ -10,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -22,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 //@CrossOrigin(origins = "http://localhost:5174")
 public class UserController {
 
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -53,31 +59,40 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login (@RequestBody User user){
+    public ResponseEntity <Map<String,Object>> login (@RequestBody User user){
         try {
-            String usernameFromFrontend = user.getUsername();
-            String passwordFromFrontend = user.getPassword();
+            authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(
+                    user.getUsername(),user.getPassword()
+            ));
+            System.out.println("username come from frontend" + " "  + user.getUsername()+
+                    "" + "password come from frontend" + user.getPassword());
+//            String usernameFromFrontend = user.getUsername();
+//            String passwordFromFrontend = user.getPassword();
 
-            UserDetails userDetails = userServiceImpl.loadUserByUsername(usernameFromFrontend);
-            if (passwordEncoder.matches(passwordFromFrontend, userDetails.getPassword())) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null
-                        , userDetails.getAuthorities());
+            UserDetails userDetails = userServiceImpl.loadUserByUsername(user.getUsername());
+            System.out.println("printing " + userDetails);
+            String jwt = jwtUtils.generateToken(user.getUsername());
+
+            System.out.println("printing JWT APNA WALA"+ "" + jwt);
+            Map<String , Object > payload = Map.of(
+                    "token",jwt,
+                    "userDetails",userDetails
+
+            );
 
                 // generate a jwt
 
-                String jwt = jwtUtils.generateToken(userDetails.getUsername());
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .body("Login successful");
-            }
+
+                return ResponseEntity.status(HttpStatus.CREATED).body(payload);
+
         }catch(UsernameNotFoundException e){
             System.out.println("this error come login kkrte samay  " + e);
             // In your method
            // log.debug("Login attempt for user: {}", user.getUsername());
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error" , " sometjing went wrong"));
 
         }
-return new ResponseEntity<>("Username or password Something wrong " , HttpStatus.FORBIDDEN);
+
     }
 
 

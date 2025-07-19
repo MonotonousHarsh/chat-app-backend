@@ -1,5 +1,7 @@
 
 
+
+
   logging:
     level:
       org:
@@ -19,6 +21,7 @@
 
   data:
     mongodb:
-      uri: mongodb+srv://monotonousharsh:I2UMWAnU0WXZ8csc@cluster0.ag2sl5g.mongodb.net/Chat_Application?retryWrites=true&w=majority&appName=Cluster0&tls=true&connectTimeoutMS=10000
+      host: localhost
+      port: 27017
       database: Chat_Application
-      auto-index-creation: true
+
