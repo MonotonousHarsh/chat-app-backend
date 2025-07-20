@@ -56,7 +56,7 @@ public class SpringSecurity {
                       .requestMatchers("/signup").permitAll() // Explicitly permit signup
                       .requestMatchers("/login").permitAll()  // Add login if needed
                       .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                      .requestMatchers("/ws-chat/**").permitAll()
+                      .requestMatchers("/ws-chat/**","/real-time/ws-chat/**").permitAll()
                       .requestMatchers("/room/**").authenticated()
                       .anyRequest().permitAll()
 

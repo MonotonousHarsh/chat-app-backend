@@ -6,7 +6,10 @@
     level:
       org:
         springframework:
+          web: DEBUG
           security: DEBUG
+          messaging: DEBUG
+          websocket: DEBUG
 
       triolance:
         chat:

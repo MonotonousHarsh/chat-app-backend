@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.util.List;
 
@@ -24,10 +25,15 @@ public class MessageController {
     @MessageMapping("/chat/{roomId}/send")
     @SendTo("/topic/room/{roomId}")
     public Message handleMessage(@DestinationVariable String roomId,
-                                 Message message, Principal principal) {
-        String fullRoomId = "real-time_" +  roomId;
+                                 Message message, Principal principal) throws AccessDeniedException {
+
+        if (principal == null) {
+            // Handle unauthenticated user
+            throw new AccessDeniedException("User not authenticated");
+        }
+      //  String fullRoomId = "real-time_" +  roomId;
         message.setSender(principal.getName());
-        message.setRoomId(fullRoomId);
+        message.setRoomId(roomId);
         messageService.saveMesssage(message);
         return message;
     }
